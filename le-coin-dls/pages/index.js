@@ -20,6 +20,7 @@ export default function Home() {
       <div>
         <h1>Bonjour</h1>
         <p>Test neuil</p>
+        <h2>eaiozghezrhgzerkhgierhgzeuihg</h2>
         <Annonce/>
       </div>
     </>
