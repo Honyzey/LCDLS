@@ -7,6 +7,11 @@ const Utilisateur = sequelize.define('Utilisateur', {
     autoIncrement: true,
     primaryKey: true,
   },
+  identifient: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -16,7 +21,7 @@ const Utilisateur = sequelize.define('Utilisateur', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  dateInscription: {
+  date_inscription: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },

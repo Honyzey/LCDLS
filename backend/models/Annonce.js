@@ -24,7 +24,7 @@ const Annonce = sequelize.define('Annonce', {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  datePublication: {
+  date_publication: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
