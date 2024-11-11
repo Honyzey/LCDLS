@@ -1,6 +1,3 @@
-<script setup>
-</script>
-
 <template>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
@@ -15,7 +12,7 @@
                     <ul class="nav-links">
                         <li><i class="fa-solid fa-house"></i><router-link to="/">Accueil</router-link></li>
                         <li><i class="fa-solid fa-rectangle-list"></i><router-link to="/annonce">Annonce</router-link></li>
-                        <li><i class="fa-solid fa-circle-plus"></i><router-link to="/annonce/creation">Céer une annonce</router-link></li>
+                        <li><i class="fa-solid fa-circle-plus"></i><router-link to="/annonce/creation">Créer une annonce</router-link></li>
                         <li><i class="fa-solid fa-comments"></i><router-link to="/message">Messages</router-link></li>
                         <li><i class="fa-solid fa-user"></i><router-link to="/profil">Profil</router-link></li>
                     </ul>
@@ -23,12 +20,34 @@
             </div>
         </header>
         
-    
-        <router-view />
+        <main>
+            <router-view />
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Le Coin DLS. Tous droits réservés.</p>
+            <ul class="footer-links">
+                <li><router-link to="/mentions-legales">Mentions Légales</router-link></li>
+                <li><router-link to="/confidentialite">Politique de confidentialité</router-link></li>
+                <li><router-link to="/contact">Contact</router-link></li>
+            </ul>
+        </footer>
     </div>
 </template>
 
 <style scoped>
+/* Pour assurer que le footer reste en bas */
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+/* Style du Header */
 header {
     background-color: #2C3E50;
     color: white;
@@ -74,5 +93,31 @@ header {
     padding: 8px 15px;
     border-radius: 4px;
     transition: background-color 0.6s;
+}
+
+/* Style du Footer */
+footer {
+    background-color: #2C3E50;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.footer-links a {
+    color: white;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: #2980B9;
 }
 </style>
