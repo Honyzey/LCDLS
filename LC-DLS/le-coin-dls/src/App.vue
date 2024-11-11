@@ -11,15 +11,17 @@
                 <nav>
                     <ul class="nav-links">
                         <li><i class="fa-solid fa-house"></i><router-link to="/">Accueil</router-link></li>
-                        <li><i class="fa-solid fa-rectangle-list"></i><router-link to="/annonce">Annonce</router-link></li>
-                        <li><i class="fa-solid fa-circle-plus"></i><router-link to="/annonce/creation">Créer une annonce</router-link></li>
+                        <li><i class="fa-solid fa-rectangle-list"></i><router-link to="/annonce">Annonce</router-link>
+                        </li>
+                        <li><i class="fa-solid fa-circle-plus"></i><router-link to="/annonce/creation">Créer une
+                                annonce</router-link></li>
                         <li><i class="fa-solid fa-comments"></i><router-link to="/message">Messages</router-link></li>
                         <li><i class="fa-solid fa-user"></i><router-link to="/profil">Profil</router-link></li>
                     </ul>
                 </nav>
             </div>
         </header>
-        
+
         <main>
             <router-view />
         </main>

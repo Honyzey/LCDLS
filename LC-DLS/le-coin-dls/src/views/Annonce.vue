@@ -1,3 +1,9 @@
 <template>
-    <<h1>Annonce</h1>>
+
+    <section class="details-annonce">
+        <div id="annonce-details"></div>
+    </section>
+
 </template>
+
+<style scoped></style>
