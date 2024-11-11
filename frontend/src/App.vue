@@ -1,5 +1,4 @@
 <template>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
     <div id="app">
         <header>
@@ -11,7 +10,7 @@
                 <nav>
                     <ul class="nav-links">
                         <li><i class="fa-solid fa-house"></i><router-link to="/">Accueil</router-link></li>
-                        <li><i class="fa-solid fa-rectangle-list"></i><router-link to="/annonce">Annonce</router-link>
+                        <li><i class="fa-solid fa-rectangle-list"></i><router-link to="/annonce">Annonces</router-link>
                         </li>
                         <li><i class="fa-solid fa-circle-plus"></i><router-link to="/annonce/creation">Créer une
                                 annonce</router-link></li>
