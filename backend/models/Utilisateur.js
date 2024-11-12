@@ -1,34 +1,42 @@
+// models/Utilisateur.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/config');
+const sequelize = require('../config/database');
 
 const Utilisateur = sequelize.define('Utilisateur', {
   id: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
     primaryKey: true,
+    autoIncrement: true,
   },
-  identifient: {
+  mail: {
+    type: DataTypes.STRING,
+    unique: true,
+    allowNull: false,
+  },
+  mot_de_passe: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
   },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
+  niveau: {
+    type: DataTypes.ENUM('admin', 'user'),
+    defaultValue: 'user',
   },
-  password: {
+  identifiant: {
     type: DataTypes.STRING,
+    unique: true,
     allowNull: false,
   },
   date_inscription: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
-  level: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
-  }
+  derniere_connexion: {
+    type: DataTypes.DATE,
+  },
+  statut: {
+    type: DataTypes.ENUM('actif', 'suspendu', 'supprimé'),
+    defaultValue: 'actif',
+  },
 });
 
 module.exports = Utilisateur;
