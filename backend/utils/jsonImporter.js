@@ -9,20 +9,20 @@ const importJSON = (filePath) => {
 
     users.forEach(async (user) => {
         const mail = user.ID;
-        const mot_de_passe = user.MDP;
+        const password = user.MDP;
 
-        if (!mail || !mot_de_passe) {
+        if (!mail || !password) {
             console.error('Données manquantes pour l\'utilisateur:', user);
             return;
         }
 
         const identifiant = mail.split('@')[0];
-        const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         try {
             await User.create({
                 mail,
-                mot_de_passe: hashedPassword,
+                password: hashedPassword,
                 identifiant,
             });
             console.log(`Utilisateur ${identifiant} importé avec succès.`);

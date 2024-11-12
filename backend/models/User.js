@@ -1,8 +1,8 @@
-// models/Utilisateur.js
+// models/User.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Utilisateur = sequelize.define('Utilisateur', {
+const User = sequelize.define('User', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -13,11 +13,11 @@ const Utilisateur = sequelize.define('Utilisateur', {
     unique: true,
     allowNull: false,
   },
-  mot_de_passe: {
+  password: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  niveau: {
+  level: {
     type: DataTypes.ENUM('admin', 'user'),
     defaultValue: 'user',
   },
@@ -26,17 +26,20 @@ const Utilisateur = sequelize.define('Utilisateur', {
     unique: true,
     allowNull: false,
   },
-  date_inscription: {
+  inscription_date: {
     type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
+    allowNull: true,
   },
-  derniere_connexion: {
+  last_connexion: {
     type: DataTypes.DATE,
   },
   statut: {
     type: DataTypes.ENUM('actif', 'suspendu', 'supprimé'),
     defaultValue: 'actif',
   },
+}, {
+  tableName: 'Users',
+  timestamps: false, // Désactive les champs createdAt et updatedAt
 });
 
-module.exports = Utilisateur;
+module.exports = User;

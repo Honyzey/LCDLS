@@ -14,3 +14,10 @@ build/
 
 # Ignorer le fichier d'importation
 import.js
+csvToJson.js
+utils/jsonImporter.js
+
+# Ignorer les fichiers de configuration de l'éditeur
+.vscode/
+.idea/
+.DS_Store
