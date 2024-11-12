@@ -47,5 +47,6 @@ const Annonce = sequelize.define('Annonce', {
 });
 
 Annonce.belongsTo(User, { foreignKey: 'user_id' });
+User.hasMany(Annonce, { foreignKey: 'user_id' });
 
 module.exports = Annonce;

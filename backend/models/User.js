@@ -39,7 +39,7 @@ const User = sequelize.define('User', {
   },
 }, {
   tableName: 'Users',
-  timestamps: false, // Désactive les champs createdAt et updatedAt
+  timestamps: false,
 });
 
 module.exports = User;

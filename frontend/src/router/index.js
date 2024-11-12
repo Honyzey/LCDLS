@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { isAuthenticated } from '../services/auth';
 
 const routes = [
   {
@@ -40,6 +41,11 @@ const routes = [
     path: '/contact',
     name: 'Contact',
     component: () => import('../views/Contact.vue')
+  },
+  {
+    path: '/connexion',
+    name: 'Connexion',
+    component: () => import('../views/Connexion.vue')
   }
 ];
 
@@ -47,5 +53,17 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
 });
+
+router.beforeEach((to, from, next) => {
+  const publocPage = ['/connexion'];
+  const authRequired = !publicPage.includes(to.path);
+  const loggedIn = isAuthenticated();
+
+  if (authRequired && !loggedIn) {
+    return next('/connexion');
+  }
+
+  next();
+})
 
 export default router;
