@@ -11,3 +11,6 @@ logs/
 # Ignorer les fichiers de sortie de build
 dist/
 build/
+
+# Ignorer le fichier d'importation
+import.js
