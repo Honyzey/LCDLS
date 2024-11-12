@@ -11,8 +11,3 @@ logs/
 # Ignorer les fichiers de sortie de build
 dist/
 build/
-
-# Ignorer les fichiers de configuration de l'éditeur
-.vscode/
-.idea/
-.DS_Store
