@@ -1,19 +1,52 @@
 <template>
-
-    <!-- Section des informations du profil -->
     <section class="profil">
         <h1>Mon Profil : </h1>
-        <p><strong>Email :</strong> <span id="user-email"></span></p>
-        <p><strong>Pseudo :</strong> <span id="user-pseudo"></span></p>
-        <p><strong>Date d'inscription :</strong> <span id="user-date"></span></p>
-        <!-- Supprimer son compte -->
+        <p><strong>Email :</strong> <span id="user-email">{{ user.mail }}</span></p>
+        <p><strong>Pseudo :</strong> <span id="user-pseudo">{{ user.identifiant }}</span></p>
+        <p><strong>Date d'inscription :</strong> <span id="user-date">{{ user.inscription_date }}</span></p>
         <button id="supprimer-compte" class="btn-danger">Supprimer mon compte</button>
-        <!-- Liste des annonces de l'utilisateur -->
         <h2>Mes Annonces : </h2>
-        <div id="annonce-details"></div>
+        <div id="annonce-details">
+            <ul>
+                <li v-for="annonce in user.annonces" :key="annonce.id">
+                    {{ annonce.title }} - {{ annonce.categorie }} - {{ annonce.prix }}€
+                </li>
+            </ul>
+        </div>
     </section>
-
 </template>
+
+<script>
+import axios from 'axios';
+import { getAuthToken } from '../services/auth';
+
+export default {
+    data() {
+        return {
+            user: {
+                mail: '',
+                identifiant: '',
+                inscription_date: '',
+                annonces: [],
+            },
+        };
+    },
+    async created() {
+        try {
+            const token = getAuthToken();
+            console.log(`Token envoyé: ${token}`);
+            const response = await axios.get('http://localhost:3000/users/profile', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            this.user = response.data;
+        } catch (error) {
+            console.error('Erreur lors de la récupération des informations de l\'utilisateur:', error);
+        }
+    },
+};
+</script>
 
 <style scoped>
 /* Styles pour la page de profil */
@@ -61,6 +94,5 @@ h3 {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.6s;
-
 }
 </style>

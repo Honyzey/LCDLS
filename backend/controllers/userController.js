@@ -1,6 +1,10 @@
 // controllers/userController.js
 const User = require('../models/User');
 const Annonce = require('../models/Annonce');
+const jwt = require('jsonwebtoken');
+const chalk = require('chalk');
+const moment = require('moment');
+require('dotenv').config();
 
 const getUserInfo = async (req, res) => {
     const { id } = req.params;
@@ -22,25 +26,33 @@ const getUserInfo = async (req, res) => {
 };
 
 const getUserProfile = async (req, res) => {
-    const { id } = req.params;
+    console.log(chalk.red('Contrôleur: getUserProfile appelé'));
+
+    const { id } = req.user;
+
+    console.log(chalk.red(`ID de l'utilisateur extrait du token: ${id}`));
 
     try {
-        const user = await User.findByPk(id, {
+        const userProfile = await User.findByPk(id, {
             include: [{ model: Annonce }],
         });
 
-        if (!user) {
+        if (!userProfile) {
+            console.log(chalk.red('Utilisateur non trouvé'));
             return res.status(404).json({ message: 'Utilisateur non trouvé' });
         }
 
+        // Formater la date d'inscription avec Moment.js
+        const formattedInscriptionDate = moment(userProfile.inscription_date).format('DD/MM/YYYY HH:mm:ss');
+
         res.status(200).json({
-            mail: user.mail,
-            identifiant: user.identifiant,
-            inscription_date: user.inscription_date,
-            annonces: user.Annonces,
+            mail: userProfile.mail,
+            identifiant: userProfile.identifiant,
+            inscription_date: formattedInscriptionDate,
+            annonces: userProfile.Annonces,
         });
     } catch (error) {
-        console.error('Erreur lors de la récupération du profil de l\'utilisateur:', error);
+        console.error(chalk.red('Erreur lors de la récupération du profil de l\'utilisateur:', error));
         res.status(500).json({ message: 'Erreur serveur' });
     }
 };

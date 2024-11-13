@@ -1,8 +1,18 @@
 // routes/user.js
 const express = require('express');
 const { getUserInfo, getUserProfile } = require('../controllers/userController');
+const authenticateToken = require('../middleware/auth');
 
 const router = express.Router();
+
+/**
+ * @route GET /users/profile
+ * @desc Récupère le profil de l'utilisateur connecté
+ * @access Private
+ * @response { mail: string, identifiant: string, inscription_date: string, annonces: [{ id: number, user_id: number, title: string, categorie: string, prix: number, description: string, etat: string, creation_date: string }] }
+ * @error { message: string }
+ */
+router.get('/profile', authenticateToken, getUserProfile);
 
 /**
  * @route GET /users/:id
@@ -13,15 +23,5 @@ const router = express.Router();
  * @error { message: string }
  */
 router.get('/:id', getUserInfo);
-
-/**
- * @route GET /users/profile/:id
- * @desc Récupère le profil d'un utilisateur par son ID
- * @access Public
- * @params { id: number }
- * @response { mail: string, identifiant: string, inscription_date: string, annonces: [{ id: number, user_id: number, title: string, categorie: string, prix: number, description: string, etat: string, creation_date: string }] }
- * @error { message: string }
- */
-router.get('/profile/:id', getUserProfile);
 
 module.exports = router;

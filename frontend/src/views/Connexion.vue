@@ -16,9 +16,7 @@
 
                 <button type="submit">Se connecter</button>
             </form>
-            <div class="signup-link">
-                <p>Pas encore de compte ? <a href="inscription.html">S'inscrire</a></p>
-            </div>
+            <div v-if="error" style="color: red;" class="error-message">{{ error }}</div>
         </div>
     </div>
 
@@ -33,6 +31,7 @@ export default {
         return {
             email: '',
             password: '',
+            error: '',
         };
     },
     methods: {
@@ -46,7 +45,16 @@ export default {
                 login(token);
                 this.$router.push('/');
             } catch (error) {
-                console.error('Erreur lors de la connexion:', error);
+                if (error.response) {
+                    // La requête a été faite et le serveur a répondu avec un statut différent de 2xx
+                    this.error = error.response.data.message;
+                } else if (error.request) {
+                    // La requête a été faite mais aucune réponse n'a été reçue
+                    this.error = 'Erreur de connexion au serveur. Veuillez réessayer plus tard.';
+                } else {
+                    // Quelque chose s'est passé lors de la configuration de la requête qui a déclenché une erreur
+                    this.error = 'Une erreur est survenue. Veuillez réessayer.';
+                }
             }
         },
     },
@@ -55,7 +63,7 @@ export default {
 
 <style scoped>
 /* Style général pour la page de connexion */
-.login-box {
+.loginBox {
     font-family: 'Poppins', sans-serif;
     background-color: #0056b3;
     display: flex;

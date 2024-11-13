@@ -10,3 +10,8 @@ export function login(token) {
 export function logout() {
     localStorage.removeItem('authToken');
 }
+
+// src/services/auth.js
+export function getAuthToken() {
+    return localStorage.getItem('authToken');
+}

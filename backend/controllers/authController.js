@@ -12,7 +12,15 @@ const login = async (req, res) => {
         const user = await User.findOne({ where: { mail } });
 
         if (!user) {
-            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+            return res.status(404).json({ message: 'Email ou Mot de passe incorrect !' });
+        }
+
+        if (user.statut === 'supprimé') {
+            return res.status(404).json({ message: "Votre compte a été supprimé veuillez contacter lecoindls@lyceedelasalle.fr" });
+        }
+
+        if (user.statut === 'suspendu') {
+            return res.status(404).json({ message: "Votre compte a été suspendu. Si vous voulez contester cette sanction veuillez contacter lecoindls@lyceedelasalle.fr" });
         }
 
         // Hacher le mot de passe fourni en MD5
@@ -22,7 +30,7 @@ const login = async (req, res) => {
         const isPasswordValid = await bcrypt.compare(md5Password, user.password);
 
         if (!isPasswordValid) {
-            return res.status(401).json({ message: 'Mot de passe incorrect' });
+            return res.status(401).json({ message: 'Email ou Mot de passe incorrect !' });
         }
 
         // Mettre à jour la date d'inscription si elle est null
@@ -39,6 +47,8 @@ const login = async (req, res) => {
         const token = jwt.sign({ id: user.id, mail: user.mail }, process.env.JWT_SECRET, {
             expiresIn: '1h', // Le token expire dans 1 heure
         });
+
+        console.log(`Token généré: ${token}`); // Ajoutez ce log pour vérifier le token généré
 
         res.status(200).json({ message: 'Connexion réussie', token });
     } catch (error) {
