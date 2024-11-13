@@ -24,7 +24,7 @@
 
 <script>
 import axios from 'axios';
-import { login } from '@/services/auth';
+import { login } from '../services/auth';
 
 export default {
     data() {

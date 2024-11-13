@@ -55,7 +55,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const publocPage = ['/connexion'];
+  const publicPage = ['/connexion'];
   const authRequired = !publicPage.includes(to.path);
   const loggedIn = isAuthenticated();
 
