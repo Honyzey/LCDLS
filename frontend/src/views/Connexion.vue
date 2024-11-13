@@ -1,22 +1,24 @@
 <template>
 
-    <!-- Zone de connexion -->
-    <div class="container">
-        <div class="project-name">
-            <h1>Le Coin DLS</h1>
-        </div>
-        <h2>Connexion</h2>
-        <form @submit.prevent="login">
-            <label for="login-email">Adresse email</label>
-            <input type="email" id="login-email" placeholder="xxx.x@lyceedelasalle.fr" required>
+    <div class="loginBox">
+        <!-- Zone de connexion -->
+        <div class="container">
+            <div class="project-name">
+                <h1>Le Coin DLS</h1>
+            </div>
+            <h2>Connexion</h2>
+            <form @submit.prevent="login">
+                <label for="login-email">Adresse email</label>
+                <input type="email" id="login-email" v-model="email" placeholder="xxx.x@lyceedelasalle.fr" required>
 
-            <label for="login-password">Mot de passe</label>
-            <input type="password" id="login-password" placeholder="Votre mot de passe" required>
+                <label for="login-password">Mot de passe</label>
+                <input type="password" id="login-password" v-model="password" placeholder="Votre mot de passe" required>
 
-            <button type="submit">Se connecter</button>
-        </form>
-        <div class="signup-link">
-            <p>Pas encore de compte ? <a href="inscription.html">S'inscrire</a></p>
+                <button type="submit">Se connecter</button>
+            </form>
+            <div class="signup-link">
+                <p>Pas encore de compte ? <a href="inscription.html">S'inscrire</a></p>
+            </div>
         </div>
     </div>
 
@@ -52,7 +54,8 @@ export default {
 </script>
 
 <style scoped>
-body {
+/* Style général pour la page de connexion */
+.login-box {
     font-family: 'Poppins', sans-serif;
     background-color: #0056b3;
     display: flex;
@@ -127,6 +130,69 @@ button:hover {
 }
 
 .signup-link a:hover {
+    text-decoration: underline;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f9f9f9;
+}
+
+.login-box {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    text-align: center;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #333;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #0056b3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #004494;
+}
+
+p {
+    margin-top: 20px;
+}
+
+a {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+a:hover {
     text-decoration: underline;
 }
 </style>

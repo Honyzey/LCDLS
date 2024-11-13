@@ -55,8 +55,8 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const publicPage = ['/connexion'];
-  const authRequired = !publicPage.includes(to.path);
+  const publicPages = ['/connexion'];
+  const authRequired = !publicPages.includes(to.path);
   const loggedIn = isAuthenticated();
 
   if (authRequired && !loggedIn) {
@@ -64,6 +64,7 @@ router.beforeEach((to, from, next) => {
   }
 
   next();
-})
+});
+
 
 export default router;

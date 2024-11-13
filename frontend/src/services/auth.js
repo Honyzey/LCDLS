@@ -1,6 +1,6 @@
 // src/services/auth.js
 export function isAuthenticated() {
-    return !!localStorage.getItem('authToken');
+    return !!localStorage.getItem('authToken'); // Vérifiez si un token d'authentification est présent
 }
 
 export function login(token) {

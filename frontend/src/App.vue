@@ -1,7 +1,7 @@
 <template>
 
     <div id="app">
-        <header>
+        <header v-if="showHeaderFooter">
             <div class="navbar">
                 <div class="logo">
                     <img src="./assets/logo.png" width="100px">
@@ -25,7 +25,7 @@
             <router-view />
         </main>
 
-        <footer>
+        <footer v-if="showHeaderFooter">
             <p>&copy; 2024 Le Coin DLS. Tous droits réservés.</p>
             <ul class="footer-links">
                 <li><router-link to="/mentions-legales">Mentions Légales</router-link></li>
@@ -35,6 +35,16 @@
         </footer>
     </div>
 </template>
+
+<script>
+export default {
+    computed: {
+        showHeaderFooter() {
+            return this.$route.path !== '/connexion';
+        }
+    }
+}
+</script>
 
 <style scoped>
 /* Pour assurer que le footer reste en bas */
