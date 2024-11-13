@@ -1,0 +1,15 @@
+{
+  "name": "lcdls",
+  "version": "1.0.0",
+  "description": "Projet Le Coin DLS",
+  "scripts": {
+    "start:backend": "cd backend && node app.js",
+    "start:frontend": "cd frontend && npm run dev",
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^6.2.1"
+  },
+  "author": "Honyzey",
+  "license": "ISC"
+}

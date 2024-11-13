@@ -4,7 +4,8 @@
         <p><strong>Email :</strong> <span id="user-email">{{ user.mail }}</span></p>
         <p><strong>Pseudo :</strong> <span id="user-pseudo">{{ user.identifiant }}</span></p>
         <p><strong>Date d'inscription :</strong> <span id="user-date">{{ user.inscription_date }}</span></p>
-        <button id="supprimer-compte" class="btn-danger">Supprimer mon compte</button>
+        <button @click="deleteAccount" id="supprimer-compte" class="btn-danger">Supprimer mon compte</button>
+        <button @click="logout" id="deconnexion" class="btn-secondary">Déconnexion</button>
         <h2>Mes Annonces : </h2>
         <div id="annonce-details">
             <ul>
@@ -18,7 +19,7 @@
 
 <script>
 import axios from 'axios';
-import { getAuthToken } from '../services/auth';
+import { getAuthToken, logout } from '../services/auth';
 
 export default {
     data() {
@@ -45,6 +46,26 @@ export default {
             console.error('Erreur lors de la récupération des informations de l\'utilisateur:', error);
         }
     },
+    methods: {
+        async deleteAccount() {
+            try {
+                const token = getAuthToken();
+                await axios.delete('http://localhost:3000/users/profile', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                alert('Compte supprimé avec succès');
+                this.logout();
+            } catch (error) {
+                console.error('Erreur lors de la suppression du compte:', error);
+            }
+        },
+        logout() {
+            logout();
+            this.$router.push('/login');
+        }
+    }
 };
 </script>
 
@@ -94,5 +115,14 @@ h3 {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.6s;
+}
+
+.profil button.btn-secondary {
+    background-color: #6c757d;
+    margin-left: 10px;
+}
+
+.profil button:hover {
+    background-color: #0056b3;
 }
 </style>

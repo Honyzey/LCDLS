@@ -1,6 +1,6 @@
 // routes/user.js
 const express = require('express');
-const { getUserInfo, getUserProfile } = require('../controllers/userController');
+const { getUserInfo, getUserProfile, deleteUserAccount } = require('../controllers/userController');
 const authenticateToken = require('../middleware/auth');
 
 const router = express.Router();
@@ -23,5 +23,14 @@ router.get('/profile', authenticateToken, getUserProfile);
  * @error { message: string }
  */
 router.get('/:id', getUserInfo);
+
+/**
+ * @route DELETE /users/profile
+ * @desc Supprime le compte de l'utilisateur connecté
+ * @access Private
+ * @response { message: string }
+ * @error { message: string }
+ */
+router.delete('/profile', authenticateToken, deleteUserAccount);
 
 module.exports = router;

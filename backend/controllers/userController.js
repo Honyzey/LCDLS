@@ -57,4 +57,29 @@ const getUserProfile = async (req, res) => {
     }
 };
 
-module.exports = { getUserInfo, getUserProfile };
+const deleteUserAccount = async (req, res) => {
+    console.log(chalk.red('Contrôleur: deleteUserAccount appelé'));
+
+    const { id } = req.user;
+
+    console.log(chalk.red(`ID de l'utilisateur extrait du token: ${id}`));
+
+    try {
+        const user = await User.findByPk(id);
+
+        if (!user) {
+            console.log(chalk.red('Utilisateur non trouvé'));
+            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        }
+
+        user.statut = 'supprimé';
+        await user.save();
+
+        res.status(200).json({ message: 'Compte supprimé avec succès' });
+    } catch (error) {
+        console.error(chalk.red('Erreur lors de la suppression du compte:', error));
+        res.status(500).json({ message: 'Erreur serveur' });
+    }
+};
+
+module.exports = { getUserInfo, getUserProfile, deleteUserAccount };

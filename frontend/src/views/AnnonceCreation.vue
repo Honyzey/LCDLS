@@ -1,20 +1,16 @@
 <template>
-
-    <!-- Section principale de création d'annonce -->
     <section class="creer-annonce">
         <div class="container">
             <h2>Créer une annonce</h2>
-            <form id="form-annonce">
-                <!-- Titre de l'annonce -->
+            <form @submit.prevent="submitAnnonce">
                 <div class="form-group">
                     <label for="titre">Titre de l'annonce :</label>
-                    <input type="text" id="titre" name="titre" placeholder="Ex: Manuel de Mathématiques" required>
+                    <input type="text" id="titre" v-model="titre" placeholder="Ex: Manuel de Mathématiques" required>
                 </div>
 
-                <!-- Catégorie -->
                 <div class="form-group">
                     <label for="categorie">Catégorie :</label>
-                    <select id="categorie" name="categorie" required>
+                    <select id="categorie" v-model="categorie" required>
                         <option value="Fournitures Scolaires">Fournitures Scolaires</option>
                         <option value="Matériel Scolaire">Matériel Scolaire</option>
                         <option value="Livre">Livre</option>
@@ -22,10 +18,9 @@
                     </select>
                 </div>
 
-                <!-- Etat -->
                 <div class="form-group">
                     <label for="etat">État :</label>
-                    <select id="etat" required>
+                    <select id="etat" v-model="etat" required>
                         <option value="Neuf">Neuf</option>
                         <option value="Très bon">Très bon</option>
                         <option value="Bon">Bon</option>
@@ -33,38 +28,39 @@
                     </select>
                 </div>
 
-                <!-- Prix -->
                 <div class="form-group">
                     <label for="prix">Prix (en €) :</label>
-                    <input type="number" id="prix" name="prix" placeholder="Ex: 20" required>
+                    <input type="number" id="prix" v-model="prix" placeholder="Ex: 20" required>
                 </div>
 
-                <!-- Description -->
                 <div class="form-group">
                     <label for="description">Description :</label>
-                    <textarea id="description" name="description" rows="4" placeholder="Décrivez l'article..."
+                    <textarea id="description" v-model="description" rows="4" placeholder="Décrivez l'article..."
                         required></textarea>
                 </div>
 
-                <!-- Image -->
                 <div class="form-group">
                     <label for="image" class="custom-file-upload">
                         <i class="fa fa-cloud-upload-alt"></i> Ajouter des images
                     </label>
-                    <input type="file" id="image" name="images[]" accept="image/*" multiple required
-                        onchange="previewMultipleImages(event)" />
+                    <input type="file" id="image" @change="handleImageUpload" accept="image/*" multiple>
                     <span id="file-count" style="margin-left: 10px; font-size: 14px; color: #555;">Aucun fichier
                         sélectionné</span>
-                    <div id="image-preview-container" style="display: flow; gap: 10px; margin-top: 10px;"></div>
+                    <div id="image-preview-container" style="display: flex; gap: 10px; margin-top: 10px;">
+                        <img v-for="image in imagePreviews" :src="image" :key="image"
+                            style="max-width: 100px; max-height: 100px; border-radius: 8px;">
+                    </div>
                 </div>
 
-                <!-- Bouton de soumission -->
                 <button type="submit" class="btn">Poster l'annonce</button>
             </form>
         </div>
     </section>
-
 </template>
+
+<script>
+
+</script>
 
 <style scoped>
 /* Styles pour la page de création d'annonce */
@@ -99,7 +95,7 @@
     display: block;
     font-weight: 600;
     margin-bottom: 10px;
-    color: #ffffff;
+    color: #2980B9;
 }
 
 .form-group input,
@@ -130,7 +126,6 @@
 input[type="file"] {
     display: none;
 }
-
 
 textarea {
     resize: vertical;
