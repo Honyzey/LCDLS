@@ -2,6 +2,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 const User = require('./User');
+const Categorie = require('./Categorie');
 
 const Annonce = sequelize.define('Annonce', {
     id: {
@@ -17,11 +18,15 @@ const Annonce = sequelize.define('Annonce', {
         },
         allowNull: false,
     },
-    title: {
-        type: DataTypes.STRING,
+    categorie_id: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Categorie,
+            key: 'id',
+        },
         allowNull: false,
     },
-    categorie: {
+    title: {
         type: DataTypes.STRING,
         allowNull: false,
     },
@@ -42,11 +47,14 @@ const Annonce = sequelize.define('Annonce', {
         defaultValue: DataTypes.NOW,
     },
 }, {
-    tableName: 'annonce',
+    tableName: 'annonces',
     timestamps: false,
 });
 
 Annonce.belongsTo(User, { foreignKey: 'user_id' });
 User.hasMany(Annonce, { foreignKey: 'user_id' });
+
+Annonce.belongsTo(Categorie, { foreignKey: 'categorie_id' });
+Categorie.hasMany(Annonce, { foreignKey: 'categorie_id' });
 
 module.exports = Annonce;

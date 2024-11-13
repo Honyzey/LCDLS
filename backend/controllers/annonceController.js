@@ -1,24 +1,25 @@
 // controllers/annonceController.js
 const Annonce = require('../models/Annonce');
+const Categorie = require('../models/Categorie');
 const Image = require('../models/Image');
 
 const createAnnonce = async (req, res) => {
-    const { user_id, title, categorie, prix, description, images } = req.body;
+    const { user_id, categorie_id, title, prix, description } = req.body;
 
     try {
         const annonce = await Annonce.create({
             user_id,
+            categorie_id,
             title,
-            categorie,
             prix,
             description,
         });
 
-        if (images && images.length > 0) {
-            const imagePromises = images.map(imageBase64 => {
+        if (req.files && req.files.length > 0) {
+            const imagePromises = req.files.map(file => {
                 return Image.create({
                     annonce_id: annonce.id,
-                    image_base64: imageBase64,
+                    image_base64: file.buffer.toString('base64'),
                 });
             });
             await Promise.all(imagePromises);
@@ -36,7 +37,7 @@ const getAnnonce = async (req, res) => {
 
     try {
         const annonce = await Annonce.findByPk(id, {
-            include: [{ model: Image }],
+            include: [{ model: Categorie }, { model: Image }],
         });
 
         if (!annonce) {
@@ -53,7 +54,7 @@ const getAnnonce = async (req, res) => {
 const getAnnonces = async (req, res) => {
     try {
         const annonces = await Annonce.findAll({
-            include: [{ model: Image }],
+            include: [{ model: Categorie }, { model: Image }],
         });
 
         res.status(200).json(annonces);
@@ -64,7 +65,7 @@ const getAnnonces = async (req, res) => {
 };
 
 const searchAnnonces = async (req, res) => {
-    const { query, categorie, etat, prix_max } = req.query;
+    const { query, categorie_id, etat, prix_max } = req.query;
 
     try {
         const whereClause = {};
@@ -72,8 +73,8 @@ const searchAnnonces = async (req, res) => {
         if (query) {
             whereClause.title = { [Op.like]: `%${query}%` };
         }
-        if (categorie) {
-            whereClause.categorie = categorie;
+        if (categorie_id) {
+            whereClause.categorie_id = categorie_id;
         }
         if (etat) {
             whereClause.etat = etat;
@@ -84,7 +85,7 @@ const searchAnnonces = async (req, res) => {
 
         const annonces = await Annonce.findAll({
             where: whereClause,
-            include: [{ model: Image }],
+            include: [{ model: Categorie }, { model: Image }],
         });
 
         res.status(200).json(annonces);
@@ -94,4 +95,14 @@ const searchAnnonces = async (req, res) => {
     }
 };
 
-module.exports = { createAnnonce, getAnnonce, getAnnonces, searchAnnonces };
+const getCategories = async (req, res) => {
+    try {
+        const categories = await Categorie.findAll();
+        res.status(200).json(categories);
+    } catch (error) {
+        console.error('Erreur lors de la récupération des catégories:', error);
+        res.status(500).json({ message: 'Erreur serveur' });
+    }
+};
+
+module.exports = { createAnnonce, getAnnonce, getAnnonces, searchAnnonces, getCategories };

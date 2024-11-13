@@ -11,10 +11,9 @@
                 <div class="form-group">
                     <label for="categorie">Catégorie :</label>
                     <select id="categorie" v-model="categorie" required>
-                        <option value="Fournitures Scolaires">Fournitures Scolaires</option>
-                        <option value="Matériel Scolaire">Matériel Scolaire</option>
-                        <option value="Livre">Livre</option>
-                        <option value="Autre">Autre</option>
+                        <option v-for="categorie in categories" :key="categorie.id" :value="categorie.id">
+                            {{ categorie.name }}
+                        </option>
                     </select>
                 </div>
 
@@ -59,7 +58,76 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { getAuthToken } from '../services/auth';
 
+export default {
+    data() {
+        return {
+            titre: '',
+            categorie: '',
+            etat: '',
+            prix: '',
+            description: '',
+            images: [],
+            imagePreviews: [],
+            categories: []
+        };
+    },
+    methods: {
+        async fetchCategories() {
+            try {
+                const response = await axios.get('http://localhost:3000/categories');
+                this.categories = response.data;
+            } catch (error) {
+                console.error('Erreur lors de la récupération des catégories:', error);
+            }
+        },
+        handleImageUpload(event) {
+            const files = event.target.files;
+            this.images = [];
+            this.imagePreviews = [];
+
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imagePreviews.push(e.target.result);
+                };
+                reader.readAsDataURL(files[i]);
+                this.images.push(files[i]);
+            }
+        },
+        async submitAnnonce() {
+            const formData = new FormData();
+            formData.append('title', this.titre);
+            formData.append('categorie_id', this.categorie);
+            formData.append('etat', this.etat);
+            formData.append('prix', this.prix);
+            formData.append('description', this.description);
+
+            for (let i = 0; i < this.images.length; i++) {
+                formData.append('images', this.images[i]);
+            }
+
+            try {
+                const token = getAuthToken();
+                const response = await axios.post('http://localhost:3000/annonces', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                console.log('Annonce créée avec succès:', response.data);
+                // Rediriger ou afficher un message de succès
+            } catch (error) {
+                console.error('Erreur lors de la création de l\'annonce:', error);
+            }
+        }
+    },
+    mounted() {
+        this.fetchCategories();
+    }
+};
 </script>
 
 <style scoped>

@@ -11,5 +11,8 @@
     "concurrently": "^6.2.1"
   },
   "author": "Honyzey",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "multer": "^1.4.5-lts.1"
+  }
 }
