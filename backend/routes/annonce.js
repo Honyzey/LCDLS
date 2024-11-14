@@ -18,23 +18,13 @@ const router = express.Router();
 router.post('/', authenticateToken, upload.array('images'), createAnnonce);
 
 /**
- * @route GET /annonces/:id
- * @desc Récupère une annonce par son ID
- * @access Public
- * @params { id: number }
- * @response { id: number, user_id: number, categorie_id: number, title: string, prix: number, description: string, etat: string, creation_date: string }
- * @error { message: string }
- */
-router.get('/:id', getAnnonce);
-
-/**
  * @route GET /annonces
  * @desc Récupère toutes les annonces
  * @access Public
  * @response { annonces: array }
  * @error { message: string }
  */
-router.get('/', getAnnonces);
+router.get('/all', getAnnonces);
 
 /**
  * @route GET /annonces/search
@@ -54,5 +44,15 @@ router.get('/search', searchAnnonces);
  * @error { message: string }
  */
 router.get('/categories', getCategories);
+
+/**
+ * @route GET /annonces/:id
+ * @desc Récupère une annonce par son ID
+ * @access Public
+ * @params { id: number }
+ * @response { id: number, user_id: number, categorie_id: number, title: string, prix: number, description: string, etat: string, creation_date: string }
+ * @error { message: string }
+ */
+router.get('/:id', getAnnonce);
 
 module.exports = router;

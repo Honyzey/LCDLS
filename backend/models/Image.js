@@ -18,7 +18,7 @@ const Image = sequelize.define('Image', {
         allowNull: false,
     },
     image_base64: {
-        type: DataTypes.TEXT,
+        type: DataTypes.TEXT('long'),
         allowNull: false,
     },
     add_date: {

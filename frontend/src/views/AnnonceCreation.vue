@@ -77,7 +77,7 @@ export default {
     methods: {
         async fetchCategories() {
             try {
-                const response = await axios.get('http://localhost:3000/categories');
+                const response = await axios.get('http://localhost:3000/annonces/categories');
                 this.categories = response.data;
             } catch (error) {
                 console.error('Erreur lors de la récupération des catégories:', error);
@@ -118,7 +118,7 @@ export default {
                     }
                 });
                 console.log('Annonce créée avec succès:', response.data);
-                // Rediriger ou afficher un message de succès
+                this.$router.push(`/annonce/${response.data.id}`);
             } catch (error) {
                 console.error('Erreur lors de la création de l\'annonce:', error);
             }
@@ -178,17 +178,18 @@ export default {
 }
 
 .custom-file-upload {
+    color: white;
     display: inline-block;
     padding: 10px 20px;
     cursor: pointer;
     background-color: #2980B9;
-    color: white;
     border-radius: 5px;
     transition: background-color 0.3s;
 }
 
 .custom-file-upload:hover {
     background-color: #1e6391;
+    color: white;
 }
 
 input[type="file"] {

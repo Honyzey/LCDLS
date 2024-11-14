@@ -2,9 +2,11 @@
 const Annonce = require('../models/Annonce');
 const Categorie = require('../models/Categorie');
 const Image = require('../models/Image');
+const moment = require('moment');
 
 const createAnnonce = async (req, res) => {
-    const { user_id, categorie_id, title, prix, description } = req.body;
+    const { categorie_id, title, prix, description } = req.body;
+    const user_id = req.user.id; // Extraire l'ID de l'utilisateur à partir du token
 
     try {
         const annonce = await Annonce.create({
@@ -43,8 +45,13 @@ const getAnnonce = async (req, res) => {
         if (!annonce) {
             return res.status(404).json({ message: 'Annonce non trouvée' });
         }
+        // Formater la date de création avec Moment.js
+        const formattedCreationDate = moment(annonce.creation_date).format('DD/MM/YYYY HH:mm');
 
-        res.status(200).json(annonce);
+        res.status(200).json({
+            ...annonce.toJSON(),
+            creation_date: formattedCreationDate,
+        });
     } catch (error) {
         console.error('Erreur lors de la récupération de l\'annonce:', error);
         res.status(500).json({ message: 'Erreur serveur' });
