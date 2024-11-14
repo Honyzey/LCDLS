@@ -52,6 +52,12 @@ const routes = [
     name: 'AnnonceDetail',
     component: () => import('../components/AnnonceDetail.vue'),
     props: true
+  },
+  {
+    path: '/profil/:id',
+    name: 'ProfilDetail',
+    component: () => import('../components/ProfilDetail.vue'),
+    props: true
   }
 ];
 

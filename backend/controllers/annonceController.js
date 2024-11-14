@@ -5,7 +5,7 @@ const Image = require('../models/Image');
 const moment = require('moment');
 
 const createAnnonce = async (req, res) => {
-    const { categorie_id, title, prix, description } = req.body;
+    const { categorie_id, title, prix, description, etat } = req.body; // Ajoutez `etat` ici
     const user_id = req.user.id; // Extraire l'ID de l'utilisateur à partir du token
 
     try {
@@ -15,22 +15,22 @@ const createAnnonce = async (req, res) => {
             title,
             prix,
             description,
+            etat // Assurez-vous que l'état est bien utilisé ici
         });
 
-        if (req.files && req.files.length > 0) {
-            const imagePromises = req.files.map(file => {
-                return Image.create({
-                    annonce_id: annonce.id,
-                    image_base64: file.buffer.toString('base64'),
-                });
-            });
-            await Promise.all(imagePromises);
+        // Ajoutez les images si elles existent
+        if (req.files) {
+            const images = req.files.map(file => ({
+                annonce_id: annonce.id,
+                image_base64: file.buffer.toString('base64')
+            }));
+            await Image.bulkCreate(images);
         }
 
         res.status(201).json(annonce);
     } catch (error) {
         console.error('Erreur lors de la création de l\'annonce:', error);
-        res.status(500).json({ message: 'Erreur serveur' });
+        res.status(500).json({ message: 'Erreur lors de la création de l\'annonce' });
     }
 };
 
@@ -39,12 +39,12 @@ const getAnnonce = async (req, res) => {
 
     try {
         const annonce = await Annonce.findByPk(id, {
-            include: [{ model: Categorie }, { model: Image }],
+            include: [Categorie, Image]
         });
-
         if (!annonce) {
             return res.status(404).json({ message: 'Annonce non trouvée' });
         }
+
         // Formater la date de création avec Moment.js
         const formattedCreationDate = moment(annonce.creation_date).format('DD/MM/YYYY HH:mm');
 
@@ -54,20 +54,19 @@ const getAnnonce = async (req, res) => {
         });
     } catch (error) {
         console.error('Erreur lors de la récupération de l\'annonce:', error);
-        res.status(500).json({ message: 'Erreur serveur' });
+        res.status(500).json({ message: 'Erreur lors de la récupération de l\'annonce' });
     }
 };
 
 const getAnnonces = async (req, res) => {
     try {
         const annonces = await Annonce.findAll({
-            include: [{ model: Categorie }, { model: Image }],
+            include: [Categorie, Image]
         });
-
-        res.status(200).json(annonces);
+        res.json(annonces);
     } catch (error) {
         console.error('Erreur lors de la récupération des annonces:', error);
-        res.status(500).json({ message: 'Erreur serveur' });
+        res.status(500).json({ message: 'Erreur lors de la récupération des annonces' });
     }
 };
 
@@ -75,41 +74,49 @@ const searchAnnonces = async (req, res) => {
     const { query, categorie_id, etat, prix_max } = req.query;
 
     try {
-        const whereClause = {};
-
+        const where = {};
         if (query) {
-            whereClause.title = { [Op.like]: `%${query}%` };
+            where.title = { [Op.like]: `%${query}%` };
         }
         if (categorie_id) {
-            whereClause.categorie_id = categorie_id;
+            where.categorie_id = categorie_id;
         }
         if (etat) {
-            whereClause.etat = etat;
+            where.etat = etat;
         }
         if (prix_max) {
-            whereClause.prix = { [Op.lte]: prix_max };
+            where.prix = { [Op.lte]: prix_max };
         }
 
         const annonces = await Annonce.findAll({
-            where: whereClause,
-            include: [{ model: Categorie }, { model: Image }],
+            where,
+            include: [Categorie, Image]
         });
-
-        res.status(200).json(annonces);
+        res.json(annonces);
     } catch (error) {
         console.error('Erreur lors de la recherche des annonces:', error);
-        res.status(500).json({ message: 'Erreur serveur' });
+        res.status(500).json({ message: 'Erreur lors de la recherche des annonces' });
     }
 };
 
 const getCategories = async (req, res) => {
     try {
         const categories = await Categorie.findAll();
-        res.status(200).json(categories);
+        res.json(categories);
     } catch (error) {
         console.error('Erreur lors de la récupération des catégories:', error);
-        res.status(500).json({ message: 'Erreur serveur' });
+        res.status(500).json({ message: 'Erreur lors de la récupération des catégories' });
     }
 };
 
-module.exports = { createAnnonce, getAnnonce, getAnnonces, searchAnnonces, getCategories };
+const getEtats = async (req, res) => {
+    try {
+        const etats = Annonce.rawAttributes.etat.values;
+        res.json(etats);
+    } catch (error) {
+        console.error('Erreur lors de la récupération des états:', error);
+        res.status(500).json({ message: 'Erreur lors de la récupération des états' });
+    }
+};
+
+module.exports = { createAnnonce, getAnnonce, getAnnonces, searchAnnonces, getCategories, getEtats };

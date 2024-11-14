@@ -39,6 +39,10 @@ const Annonce = sequelize.define('Annonce', {
         allowNull: false,
     },
     etat: {
+        type: DataTypes.ENUM('Neuf', 'Très bon', 'Bon', 'Usagé'),
+        allowNull: false,
+    },
+    statut: {
         type: DataTypes.ENUM('en_vente', 'vendu', 'suspendu'),
         defaultValue: 'en_vente',
     },

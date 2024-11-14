@@ -1,53 +1,96 @@
-<script setup>
-
-</script>
-
 <template>
-
-    <section class="Annonce">
-
+    <section class="annonce">
+        <div class="container">
+            <h2>Liste des annonces</h2>
+            <form id="search-form" @submit.prevent="searchAnnonces">
+                <input type="text" id="search-bar" v-model="query" placeholder="Rechercher par titre..." />
+                <button type="submit">Rechercher</button>
+                <button type="button" class="toggle-filters" @click="toggleFilters">Filtres</button>
+            </form>
+            <div id="filters-section" v-if="showFilters">
+                <select v-model="selectedCategorie">
+                    <option value="">Toutes les catégories</option>
+                    <option v-for="categorie in categories" :key="categorie.id" :value="categorie.id">
+                        {{ categorie.name }}
+                    </option>
+                </select>
+            </div>
+            <div class="annonces-container">
+                <AnnonceCard v-for="annonce in filteredAnnonces" :key="annonce.id" :annonce="annonce" />
+            </div>
+        </div>
     </section>
-
 </template>
+
+<script>
+import axios from 'axios';
+import AnnonceCard from '../components/AnnonceCard.vue';
+
+export default {
+    components: {
+        AnnonceCard
+    },
+    data() {
+        return {
+            annonces: [],
+            categories: [],
+            query: '',
+            selectedCategorie: '',
+            showFilters: false
+        };
+    },
+    computed: {
+        filteredAnnonces() {
+            return this.annonces.filter(annonce => {
+                return (
+                    (this.query === '' || annonce.title.toLowerCase().includes(this.query.toLowerCase())) &&
+                    (this.selectedCategorie === '' || annonce.categorie_id === parseInt(this.selectedCategorie))
+                );
+            });
+        }
+    },
+    methods: {
+        async fetchAnnonces() {
+            try {
+                const response = await axios.get('http://localhost:3000/annonces/all');
+                this.annonces = response.data;
+            } catch (error) {
+                console.error('Erreur lors de la récupération des annonces:', error);
+            }
+        },
+        async fetchCategories() {
+            try {
+                const response = await axios.get('http://localhost:3000/annonces/categories');
+                this.categories = response.data;
+            } catch (error) {
+                console.error('Erreur lors de la récupération des catégories:', error);
+            }
+        },
+        searchAnnonces() {
+            // La recherche est gérée par la computed property filteredAnnonces
+        },
+        toggleFilters() {
+            this.showFilters = !this.showFilters;
+        }
+    },
+    mounted() {
+        this.fetchAnnonces();
+        this.fetchCategories();
+    }
+};
+</script>
 
 <style scoped>
 .container {
     max-width: 1200px;
-    /* Limite la largeur maximale du conteneur */
     margin: 0 auto;
-    /* Centre le conteneur */
+    padding: 20px;
 }
-
 
 .container h2 {
     font-size: 28px;
     margin-bottom: 20px;
     text-align: center;
-    max-width: 300px;
-}
-
-.container p {
-    font-size: 18px;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.container img {
-    display: flex;
-    max-width: 300px;
-    max-height: 300px;
-    border-radius: 8px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-
-
-/* Style du conteneur du formulaire de recherche */
-
-#filters-section {
-    display: flex;
 }
 
 #search-form {
@@ -62,8 +105,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
-/* Style du champ de recherche */
 #search-bar {
     flex: 1;
     padding: 10px;
@@ -71,7 +112,6 @@
     border-radius: 4px;
     font-size: 16px;
     margin-right: 10px;
-    width: 400px;
 }
 
 #search-bar:focus {
@@ -79,7 +119,6 @@
     outline: none;
 }
 
-/* Style du bouton de recherche */
 button[type="submit"],
 .toggle-filters {
     background-color: #2980B9;
@@ -98,24 +137,15 @@ button[type="submit"]:hover,
     background-color: #1e6391;
 }
 
-
-
-/* Style pour la section des filtres */
-
-
-/* Par défaut, on masque la section des filtres */
 #filters-section {
-    display: none;
-    /* Masquer les filtres par défaut */
+    display: flex;
     justify-content: center;
-    /* Centrer les filtres */
+    margin: 20px 0;
 }
 
-/* Quand on clique sur le bouton, les filtres s'affichent */
-.filters-visible #filters-section {
+.annonces-container {
     display: flex;
-    /* Afficher les filtres quand le bouton est cliqué */
+    flex-wrap: wrap;
     justify-content: center;
-    /* Toujours centrer les filtres */
 }
 </style>

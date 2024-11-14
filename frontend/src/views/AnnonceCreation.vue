@@ -20,10 +20,9 @@
                 <div class="form-group">
                     <label for="etat">État :</label>
                     <select id="etat" v-model="etat" required>
-                        <option value="Neuf">Neuf</option>
-                        <option value="Très bon">Très bon</option>
-                        <option value="Bon">Bon</option>
-                        <option value="Usagé">Usagé</option>
+                        <option v-for="etat in etats" :key="etat" :value="etat">
+                            {{ etat }}
+                        </option>
                     </select>
                 </div>
 
@@ -71,7 +70,8 @@ export default {
             description: '',
             images: [],
             imagePreviews: [],
-            categories: []
+            categories: [],
+            etats: [] // États possibles du produit
         };
     },
     methods: {
@@ -81,6 +81,14 @@ export default {
                 this.categories = response.data;
             } catch (error) {
                 console.error('Erreur lors de la récupération des catégories:', error);
+            }
+        },
+        async fetchEtats() {
+            try {
+                const response = await axios.get('http://localhost:3000/annonces/etats');
+                this.etats = response.data;
+            } catch (error) {
+                console.error('Erreur lors de la récupération des états:', error);
             }
         },
         handleImageUpload(event) {
@@ -101,9 +109,9 @@ export default {
             const formData = new FormData();
             formData.append('title', this.titre);
             formData.append('categorie_id', this.categorie);
-            formData.append('etat', this.etat);
+            formData.append('etat', this.etat); // Assurez-vous que l'état est bien ajouté
             formData.append('prix', this.prix);
-            formData.append('description', this.description);
+            formData.append('description', this.description.replace(/\n/g, '<br>')); // Convertir les sauts de ligne en <br>
 
             for (let i = 0; i < this.images.length; i++) {
                 formData.append('images', this.images[i]);
@@ -126,6 +134,7 @@ export default {
     },
     mounted() {
         this.fetchCategories();
+        this.fetchEtats(); // Récupérez les états possibles lors du montage du composant
     }
 };
 </script>

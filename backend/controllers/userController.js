@@ -18,7 +18,16 @@ const getUserInfo = async (req, res) => {
             return res.status(404).json({ message: 'Utilisateur non trouvé' });
         }
 
-        res.status(200).json(user);
+        // Formater la date de la dernière connexion avec Moment.js
+        const formattedLastConnexion = moment(user.last_connexion).format('DD/MM/YYYY HH:mm:ss');
+        // Formater la date d'inscription avec Moment.js
+        const formattedInscriptionDate = moment(user.inscription_date).format('DD/MM/YYYY HH:mm:ss');
+
+        res.status(200).json({
+            ...user.toJSON(),
+            last_connexion: formattedLastConnexion,
+            inscription_date: formattedInscriptionDate
+        });
     } catch (error) {
         console.error('Erreur lors de la récupération des informations de l\'utilisateur:', error);
         res.status(500).json({ message: 'Erreur serveur' });

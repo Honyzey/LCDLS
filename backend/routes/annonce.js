@@ -1,6 +1,6 @@
 // routes/annonce.js
 const express = require('express');
-const { createAnnonce, getAnnonce, getAnnonces, searchAnnonces, getCategories } = require('../controllers/annonceController');
+const { createAnnonce, getAnnonce, getAnnonces, searchAnnonces, getCategories, getEtats } = require('../controllers/annonceController');
 const authenticateToken = require('../middleware/auth');
 const multer = require('multer');
 const upload = multer();
@@ -44,6 +44,16 @@ router.get('/search', searchAnnonces);
  * @error { message: string }
  */
 router.get('/categories', getCategories);
+
+/**
+ * @route GET /annonces/etats
+ * @desc Récupère les états des annonces
+ * @access Public
+ * @params { id: number }
+ * @response { etat: string }
+ * @error { message: string }
+ */
+router.get('/etats', getEtats); // Ajoutez cette ligne
 
 /**
  * @route GET /annonces/:id
