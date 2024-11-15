@@ -7,12 +7,8 @@
         <button @click="deleteAccount" id="supprimer-compte" class="btn-danger">Supprimer mon compte</button>
         <button @click="logout" id="deconnexion" class="btn-secondary">Déconnexion</button>
         <h2>Mes Annonces : </h2>
-        <div id="annonce-details">
-            <ul>
-                <li v-for="annonce in user.annonces" :key="annonce.id">
-                    {{ annonce.title }} - {{ annonce.categorie }} - {{ annonce.prix }}€
-                </li>
-            </ul>
+        <div class="annonces-container">
+            <AnnonceCard v-for="annonce in annonces" :key="annonce.id" :annonce="annonce" />
         </div>
     </section>
 </template>
@@ -20,16 +16,20 @@
 <script>
 import axios from 'axios';
 import { getAuthToken, logout } from '../services/auth';
+import AnnonceCard from '../components/AnnonceCard.vue';
 
 export default {
+    components: {
+        AnnonceCard
+    },
     data() {
         return {
             user: {
                 mail: '',
                 identifiant: '',
                 inscription_date: '',
-                annonces: [],
             },
+            annonces: []
         };
     },
     async created() {
@@ -42,6 +42,14 @@ export default {
                 },
             });
             this.user = response.data;
+
+            // Récupérer les annonces de l'utilisateur connecté
+            const annoncesResponse = await axios.get('http://localhost:3000/annonces/user', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            this.annonces = annoncesResponse.data;
         } catch (error) {
             console.error('Erreur lors de la récupération des informations de l\'utilisateur:', error);
         }
@@ -124,5 +132,13 @@ h3 {
 
 .profil button:hover {
     background-color: #0056b3;
+}
+
+.annonces-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
 }
 </style>

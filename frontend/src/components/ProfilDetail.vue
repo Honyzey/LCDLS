@@ -6,28 +6,29 @@
         <p><strong>Date d'inscription :</strong> <span id="user-date">{{ user.inscription_date }}</span></p>
         <p><strong>Dernière connexion :</strong> <span id="user-date">{{ user.last_connexion }}</span></p>
         <h2>Ses Annonces : </h2>
-        <div id="annonce-details">
-            <ul>
-                <li v-for="annonce in user.Annonces" :key="annonce.id">
-                    {{ annonce.title }} - {{ annonce.categorie }} - {{ annonce.prix }}€
-                </li>
-            </ul>
+        <div class="annonces-container">
+            <AnnonceCard v-for="annonce in annonces" :key="annonce.id" :annonce="annonce" />
         </div>
     </section>
 </template>
 
 <script>
 import axios from 'axios';
+import AnnonceCard from '../components/AnnonceCard.vue';
 
 export default {
+    components: {
+        AnnonceCard
+    },
     data() {
         return {
             user: {
                 mail: '',
                 identifiant: '',
                 inscription_date: '',
-                Annonces: [],
+                last_connexion: ''
             },
+            annonces: []
         };
     },
     async created() {
@@ -35,6 +36,10 @@ export default {
         try {
             const response = await axios.get(`http://localhost:3000/users/${userId}`);
             this.user = response.data;
+
+            // Récupérer les annonces de l'utilisateur par ID
+            const annoncesResponse = await axios.get(`http://localhost:3000/annonces/user/${userId}`);
+            this.annonces = annoncesResponse.data;
         } catch (error) {
             console.error('Erreur lors de la récupération des informations de l\'utilisateur:', error);
         }
@@ -97,5 +102,13 @@ h3 {
 
 .profil button:hover {
     background-color: #0056b3;
+}
+
+.annonces-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
 }
 </style>

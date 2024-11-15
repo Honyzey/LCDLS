@@ -1,6 +1,6 @@
 // routes/annonce.js
 const express = require('express');
-const { createAnnonce, getAnnonce, getAnnonces, searchAnnonces, getCategories, getEtats, getLatestAnnonces } = require('../controllers/annonceController');
+const { createAnnonce, getAnnonce, getAnnonces, searchAnnonces, getCategories, getEtats, getLatestAnnonces, getAnnoncesByUser, getAnnoncesByUserId } = require('../controllers/annonceController');
 const authenticateToken = require('../middleware/auth');
 const multer = require('multer');
 const upload = multer();
@@ -62,7 +62,26 @@ router.get('/categories', getCategories);
  * @response { etat: string }
  * @error { message: string }
  */
-router.get('/etats', getEtats); // Ajoutez cette ligne
+router.get('/etats', getEtats);
+
+/**
+ * @route GET /annonces/user
+ * @desc Récupère toutes les annonces de l'utilisateur connecté
+ * @access Private
+ * @response { annonces: array }
+ * @error { message: string }
+ */
+router.get('/user', authenticateToken, getAnnoncesByUser);
+
+/**
+ * @route GET /annonces/user/:id
+ * @desc Récupère toutes les annonces d'un utilisateur par son ID
+ * @access Public
+ * @params { id: number }
+ * @response { annonces: array }
+ * @error { message: string }
+ */
+router.get('/user/:id', getAnnoncesByUserId);
 
 /**
  * @route GET /annonces/:id

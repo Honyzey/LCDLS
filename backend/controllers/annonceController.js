@@ -133,4 +133,34 @@ const getLatestAnnonces = async (req, res) => {
     }
 };
 
-module.exports = { createAnnonce, getAnnonce, getAnnonces, searchAnnonces, getCategories, getEtats, getLatestAnnonces };
+const getAnnoncesByUser = async (req, res) => {
+    const user_id = req.user.id;
+
+    try {
+        const annonces = await Annonce.findAll({
+            where: { user_id },
+            include: [Categorie, Image]
+        });
+        res.json(annonces);
+    } catch (error) {
+        console.error('Erreur lors de la récupération des annonces de l\'utilisateur:', error);
+        res.status(500).json({ message: 'Erreur lors de la récupération des annonces de l\'utilisateur' });
+    }
+};
+
+const getAnnoncesByUserId = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const annonces = await Annonce.findAll({
+            where: { user_id: id },
+            include: [Categorie, Image]
+        });
+        res.json(annonces);
+    } catch (error) {
+        console.error('Erreur lors de la récupération des annonces de l\'utilisateur:', error);
+        res.status(500).json({ message: 'Erreur lors de la récupération des annonces de l\'utilisateur' });
+    }
+};
+
+module.exports = { createAnnonce, getAnnonce, getAnnonces, searchAnnonces, getCategories, getEtats, getLatestAnnonces, getAnnoncesByUser, getAnnoncesByUserId };
