@@ -9,8 +9,20 @@ const userRoutes = require('./routes/user');
 
 const app = express();
 
-app.use(cors());
+// Vérifiez que les variables d'environnement sont chargées
+console.log('JWT_SECRET:', process.env.JWT_SECRET);
+console.log('JWT_REFRESH_SECRET:', process.env.JWT_REFRESH_SECRET);
+
+// Configuration de CORS
+app.use(cors({
+    origin: 'http://localhost:5173', // Remplacez par l'URL de votre frontend
+    credentials: true
+}));
+
+// Middleware pour parser les requêtes JSON
 app.use(express.json());
+
+// Routes
 app.use('/auth', authRoutes);
 app.use('/annonces', annonceRoutes);
 app.use('/messages', messageRoutes);
