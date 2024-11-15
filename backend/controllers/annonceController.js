@@ -119,4 +119,18 @@ const getEtats = async (req, res) => {
     }
 };
 
-module.exports = { createAnnonce, getAnnonce, getAnnonces, searchAnnonces, getCategories, getEtats };
+const getLatestAnnonces = async (req, res) => {
+    try {
+        const annonces = await Annonce.findAll({
+            limit: 10,
+            order: [['creation_date', 'DESC']],
+            include: [Categorie, Image]
+        });
+        res.json(annonces);
+    } catch (error) {
+        console.error('Erreur lors de la récupération des dernières annonces:', error);
+        res.status(500).json({ message: 'Erreur lors de la récupération des dernières annonces' });
+    }
+};
+
+module.exports = { createAnnonce, getAnnonce, getAnnonces, searchAnnonces, getCategories, getEtats, getLatestAnnonces };

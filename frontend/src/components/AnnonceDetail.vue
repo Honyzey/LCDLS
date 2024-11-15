@@ -38,7 +38,9 @@
         </section>
 
         <div class="user-card" v-if="user">
-            <h3>{{ user.identifiant }}</h3>
+            <router-link :to="{ name: 'ProfilDetail', params: { id: user.id } }">
+                <h3>{{ user.identifiant }}</h3>
+            </router-link>
             <p v-if="user.Annonces.length > 1">{{ user.Annonces.length }} annonces postées</p>
             <p>Dernière connexion : {{ user.last_connexion }}</p>
             <button @click="sendMessage" class="btn-primary">Envoyer un message</button>

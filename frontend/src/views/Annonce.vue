@@ -76,6 +76,7 @@ export default {
     mounted() {
         this.fetchAnnonces();
         this.fetchCategories();
+        this.query = this.$route.query.query || '';
     }
 };
 </script>

@@ -1,17 +1,55 @@
 <template>
-
     <section class="banner">
         <div class="banner-content">
             <h1>Bienvenue sur Le Coin DLS</h1>
             <p>Achetez et vendez vos manuels et fournitures scolaires facilement.</p>
-            <form id="search-form" onsubmit="return rechercherAnnonces(event)">
-              <input type="text" id="search-bar" name="query" placeholder="Rechercher une annonce...">
-              <button type="submit">Rechercher</button>
-            </form>  
+            <form id="search-form" @submit.prevent="rechercherAnnonces">
+                <input type="text" id="search-bar" v-model="query" placeholder="Rechercher une annonce...">
+                <button type="submit">Rechercher</button>
+            </form>
         </div>
     </section>
 
+    <section class="latest-annonces">
+        <h2>Dernières annonces</h2>
+        <div class="annonces-container">
+            <AnnonceCard v-for="annonce in annonces" :key="annonce.id" :annonce="annonce" />
+        </div>
+    </section>
 </template>
+
+<script>
+import axios from 'axios';
+import AnnonceCard from '../components/AnnonceCard.vue';
+
+export default {
+    components: {
+        AnnonceCard
+    },
+    data() {
+        return {
+            annonces: [],
+            query: ''
+        };
+    },
+    methods: {
+        async fetchLatestAnnonces() {
+            try {
+                const response = await axios.get('http://localhost:3000/annonces/latest');
+                this.annonces = response.data;
+            } catch (error) {
+                console.error('Erreur lors de la récupération des dernières annonces:', error);
+            }
+        },
+        rechercherAnnonces() {
+            this.$router.push({ name: 'Annonce', query: { query: this.query } });
+        }
+    },
+    mounted() {
+        this.fetchLatestAnnonces();
+    }
+};
+</script>
 
 <style scoped>
 /* Styles pour la page d'accueil */
@@ -77,35 +115,20 @@ button[type="submit"]:hover {
     background-color: #1e6391;
 }
 
-/* Style du champ de recherche */
-#search-bar {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
+.latest-annonces {
+    padding: 20px;
+    text-align: center;
 }
 
-#search-bar:focus {
-    border-color: #0056b3;
-    outline: none;
+.latest-annonces h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
 }
 
-/* Style du bouton de recherche */
-button[type="submit"] {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    background-color: #2980B9;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    margin-left: 10px;
-    transition: background-color 0.3s ease;
-}
-
-button[type="submit"]:hover {
-    background-color: #1e6391;
+.annonces-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
 }
 </style>

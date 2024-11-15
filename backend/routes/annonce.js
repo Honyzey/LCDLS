@@ -1,6 +1,6 @@
 // routes/annonce.js
 const express = require('express');
-const { createAnnonce, getAnnonce, getAnnonces, searchAnnonces, getCategories, getEtats } = require('../controllers/annonceController');
+const { createAnnonce, getAnnonce, getAnnonces, searchAnnonces, getCategories, getEtats, getLatestAnnonces } = require('../controllers/annonceController');
 const authenticateToken = require('../middleware/auth');
 const multer = require('multer');
 const upload = multer();
@@ -25,6 +25,15 @@ router.post('/', authenticateToken, upload.array('images'), createAnnonce);
  * @error { message: string }
  */
 router.get('/all', getAnnonces);
+
+/**
+ * @route GET /latest
+ * @desc Récupère les 10 dernières annonces
+ * @access Public
+ * @response { annonces: array }
+ * @error { message: string }
+ */
+router.get('/latest', getLatestAnnonces);
 
 /**
  * @route GET /annonces/search
