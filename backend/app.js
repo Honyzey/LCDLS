@@ -1,6 +1,7 @@
 // app.js
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const sequelize = require('./config/db');
 const authRoutes = require('./routes/auth');
 const annonceRoutes = require('./routes/annonce');
@@ -21,6 +22,9 @@ app.use(cors({
 
 // Middleware pour parser les requêtes JSON
 app.use(express.json());
+
+// Middleware pour parser les cookies
+app.use(cookieParser());
 
 // Routes
 app.use('/auth', authRoutes);

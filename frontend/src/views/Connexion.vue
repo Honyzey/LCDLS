@@ -1,5 +1,4 @@
 <template>
-
     <div class="loginBox">
         <!-- Zone de connexion -->
         <div class="container">
@@ -19,12 +18,10 @@
             <div v-if="error" style="color: red;" class="error-message">{{ error }}</div>
         </div>
     </div>
-
 </template>
 
 <script>
 import axios from 'axios';
-import { login } from '../services/auth';
 
 export default {
     data() {
@@ -36,23 +33,26 @@ export default {
     },
     methods: {
         async login() {
+            console.log('Tentative de connexion avec:', this.email);
             try {
                 const response = await axios.post('http://localhost:3000/auth/login', {
                     mail: this.email,
                     password: this.password,
-                });
-                const token = response.data.token;
-                login(token);
+                }, { withCredentials: true });
+                console.log('Connexion réussie, redirection vers la page d\'accueil');
                 this.$router.push('/');
             } catch (error) {
                 if (error.response) {
                     // La requête a été faite et le serveur a répondu avec un statut différent de 2xx
+                    console.log('Erreur de réponse:', error.response.data.message);
                     this.error = error.response.data.message;
                 } else if (error.request) {
                     // La requête a été faite mais aucune réponse n'a été reçue
+                    console.log('Erreur de requête:', error.request);
                     this.error = 'Erreur de connexion au serveur. Veuillez réessayer plus tard.';
                 } else {
                     // Quelque chose s'est passé lors de la configuration de la requête qui a déclenché une erreur
+                    console.log('Erreur:', error.message);
                     this.error = 'Une erreur est survenue. Veuillez réessayer.';
                 }
             }

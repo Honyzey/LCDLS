@@ -8,18 +8,23 @@ require('dotenv').config();
 const login = async (req, res) => {
     const { mail, password } = req.body;
 
+    console.log('Tentative de connexion pour:', mail);
+
     try {
         const user = await User.findOne({ where: { mail } });
 
         if (!user) {
+            console.log('Utilisateur non trouvé');
             return res.status(404).json({ message: 'Email ou Mot de passe incorrect !' });
         }
 
         if (user.statut === 'supprimé') {
+            console.log('Compte supprimé');
             return res.status(404).json({ message: "Votre compte a été supprimé veuillez contacter lecoindls@lyceedelasalle.fr" });
         }
 
         if (user.statut === 'suspendu') {
+            console.log('Compte suspendu');
             return res.status(404).json({ message: "Votre compte a été suspendu. Si vous voulez contester cette sanction veuillez contacter lecoindls@lyceedelasalle.fr" });
         }
 
@@ -30,6 +35,7 @@ const login = async (req, res) => {
         const isPasswordValid = await bcrypt.compare(md5Password, user.password);
 
         if (!isPasswordValid) {
+            console.log('Mot de passe incorrect');
             return res.status(401).json({ message: 'Email ou Mot de passe incorrect !' });
         }
 
@@ -50,7 +56,12 @@ const login = async (req, res) => {
 
         console.log(`Token généré: ${token}`); // Ajoutez ce log pour vérifier le token généré
 
-        res.status(200).json({ message: 'Connexion réussie', token });
+        // Envoyer le token dans un cookie
+        res.cookie('authToken', token, { httpOnly: false, secure: false, sameSite: 'Lax', maxAge: 3600000 }); // 1 heure
+
+        console.log('Token envoyé dans un cookie');
+
+        res.status(200).json({ message: 'Connexion réussie' });
     } catch (error) {
         console.error('Erreur lors de la connexion:', error);
         res.status(500).json({ message: 'Erreur serveur' });

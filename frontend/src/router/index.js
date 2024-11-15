@@ -67,16 +67,17 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  console.log('Navigation vers:', to.path);
   const publicPages = ['/connexion'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = isAuthenticated();
 
   if (authRequired && !loggedIn) {
+    console.log('Accès refusé, redirection vers /connexion');
     return next('/connexion');
   }
 
   next();
 });
-
 
 export default router;

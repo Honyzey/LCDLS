@@ -15,7 +15,7 @@
 
 <script>
 import axios from 'axios';
-import { getAuthToken, logout } from '../services/auth';
+import { logout } from '../services/auth';
 import AnnonceCard from '../components/AnnonceCard.vue';
 
 export default {
@@ -34,20 +34,16 @@ export default {
     },
     async created() {
         try {
-            const token = getAuthToken();
-            console.log(`Token envoyé: ${token}`);
+            console.log('Récupération du profil de l\'utilisateur');
             const response = await axios.get('http://localhost:3000/users/profile', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                withCredentials: true,
             });
             this.user = response.data;
 
             // Récupérer les annonces de l'utilisateur connecté
+            console.log('Récupération des annonces de l\'utilisateur');
             const annoncesResponse = await axios.get('http://localhost:3000/annonces/user', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                withCredentials: true,
             });
             this.annonces = annoncesResponse.data;
         } catch (error) {
@@ -57,11 +53,9 @@ export default {
     methods: {
         async deleteAccount() {
             try {
-                const token = getAuthToken();
+                console.log('Suppression du compte de l\'utilisateur');
                 await axios.delete('http://localhost:3000/users/profile', {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    withCredentials: true,
                 });
                 alert('Compte supprimé avec succès');
                 this.logout();
@@ -70,6 +64,7 @@ export default {
             }
         },
         logout() {
+            console.log('Déconnexion de l\'utilisateur');
             logout();
             this.$router.push('/login');
         }
